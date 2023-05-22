@@ -8,21 +8,22 @@ float kare2Kutle; // Kare 2'nin kütlesi
 int carpismaSayisi = 0;
 
 final int kare1Boyut = 50;
-final int kare2Boyut = 50;
+final int kare2Boyut = 100;
+final int xEkseniSiniri = 100;
 
 void setup() {
   size(800, 400);
 
   // Kare 1'in başlangıç değerleri
   kare1X = 200;
-  kare1Y = height / 2;
+  kare1Y = 2 * height / 3;
   kare1HizX = 0;
   kare1HizY = 0;
   kare1Kutle = 1;
 
   // Kare 2'nin başlangıç değerleri
   kare2X = 400;
-  kare2Y = height / 2;
+  kare2Y = 2 * height / 3;
   kare2HizX = -1;
   kare2HizY = 0;
   kare2Kutle = 100;
@@ -30,22 +31,11 @@ void setup() {
 
 void draw() {
   background(150);
-
-  // Kareleri çizdirme
-  fill(50);
-  noStroke();
-  rect(kare1X, kare1Y, kare1Boyut, kare1Boyut);
-
-  fill(200);
-  noStroke();
-  rect(kare2X, kare2Y, kare2Boyut, kare2Boyut);
-
+  kareleriCiz();
   // Karelerin hareketi
   kare1X += kare1HizX;
-  kare1Y += kare1HizY;
 
   kare2X += kare2HizX;
-  kare2Y += kare2HizY;
 
   // Karelerin çarpışmasını kontrol etme
   if (karelerCarpisti()) {
@@ -67,23 +57,34 @@ void draw() {
   }
 
   // Ekran sınırlarına çarpma kontrolü
-  if (kare1X <= 0 || kare1X >= width - kare1Boyut) {
-    kare1HizX *= -1; //<>//
+  if (kare1X <= xEkseniSiniri) {
+    kare1HizX *= -1;
     carpismaSayisiArttir();
   }
-  
+
   if (kare2X <= 0) {
     kare2HizX *= -1;
   }
-  
 }
 
 void carpismaSayisiArttir() {
-  carpismaSayisi +=1 ;
+  carpismaSayisi +=1 ; //<>//
   println(carpismaSayisi);
 }
 
 // Karelerin çarpışma kontrolü
 boolean karelerCarpisti() {
   return kare1X + kare1Boyut >= kare2X && kare1X <= kare2X + kare2Boyut;
+}
+void kareleriCiz() {
+  fill(50);
+  rect(kare1X, kare1Y, kare1Boyut, kare1Boyut);
+  text("KG: " + kare1Kutle, kare1X, kare1Y);
+
+  fill(200);
+  rect(kare2X, kare2Y - kare1Boyut, kare2Boyut, kare2Boyut);
+
+  text("KG: " + kare2Kutle, kare2X, kare2Y - kare1Boyut);
+  line(xEkseniSiniri, 0, xEkseniSiniri, height);
+  line(xEkseniSiniri, kare2Y - kare1Boyut + kare2Boyut, width, kare2Y - kare1Boyut + kare2Boyut);
 }
