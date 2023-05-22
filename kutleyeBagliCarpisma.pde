@@ -7,6 +7,9 @@ float kare2HizX, kare2HizY; // Kare 2'nin hızı
 float kare2Kutle; // Kare 2'nin kütlesi
 int carpismaSayisi = 0;
 
+final int kare1Boyut = 50;
+final int kare2Boyut = 50;
+
 void setup() {
   size(800, 400);
 
@@ -15,16 +18,14 @@ void setup() {
   kare1Y = height / 2;
   kare1HizX = 0;
   kare1HizY = 0;
-  kare1Kutle = 2;
+  kare1Kutle = 1;
 
   // Kare 2'nin başlangıç değerleri
   kare2X = 400;
   kare2Y = height / 2;
-  kare2HizX = -3;
+  kare2HizX = -1;
   kare2HizY = 0;
-  kare2Kutle = 20;
-  print("kare 1 'in kütlesi" + kare1Kutle);
-  print("kare 2 'nin kütlesi" + kare2Kutle);
+  kare2Kutle = 100;
 }
 
 void draw() {
@@ -33,11 +34,11 @@ void draw() {
   // Kareleri çizdirme
   fill(50);
   noStroke();
-  rect(kare1X, kare1Y, 50, 50);
+  rect(kare1X, kare1Y, kare1Boyut, kare1Boyut);
 
   fill(200);
   noStroke();
-  rect(kare2X, kare2Y, 50, 50);
+  rect(kare2X, kare2Y, kare2Boyut, kare2Boyut);
 
   // Karelerin hareketi
   kare1X += kare1HizX;
@@ -48,9 +49,6 @@ void draw() {
 
   // Karelerin çarpışmasını kontrol etme
   if (karelerCarpisti()) {
-
-    carpismaSayisi +=1 ;
-    println(carpismaSayisi);
 
     // Kareler çarpıştığında hız değişimlerini hesapla
     float yeniHiz1X = ((kare1Kutle - kare2Kutle) * kare1HizX + (2 * kare2Kutle * kare2HizX)) / (kare1Kutle + kare2Kutle);
@@ -65,28 +63,27 @@ void draw() {
 
     kare2HizX = yeniHiz2X;
     kare2HizY = yeniHiz2Y;
+    carpismaSayisiArttir();
   }
 
   // Ekran sınırlarına çarpma kontrolü
-  if (kare1X <= 0 || kare1X >= width - 50) {
-    kare1HizX *= -1;
+  if (kare1X <= 0 || kare1X >= width - kare1Boyut) {
+    kare1HizX *= -1; //<>//
+    carpismaSayisiArttir();
   }
-  if (kare1Y <= 0 || kare1Y >= height - 50) {
-    kare1HizY *= -1;
-  }
-
-  if (kare2X <= 0 || kare2X >= width - 50) {
+  
+  if (kare2X <= 0) {
     kare2HizX *= -1;
   }
-  if (kare2Y <= 0 || kare2Y >= height - 50) {
-    kare2HizY *= -1;
-  }
+  
+}
+
+void carpismaSayisiArttir() {
+  carpismaSayisi +=1 ;
+  println(carpismaSayisi);
 }
 
 // Karelerin çarpışma kontrolü
 boolean karelerCarpisti() {
-  if (kare1X + 50 >= kare2X && kare1X <= kare2X + 50 && kare1Y + 50 >= kare2Y && kare1Y <= kare2Y + 50) {
-    return true;
-  }
-  return false;
+  return kare1X + kare1Boyut >= kare2X && kare1X <= kare2X + kare2Boyut;
 }
